@@ -9,11 +9,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.jpa.domain.Specification;
 import uk.mirek.kpler.dto.Position;
+import uk.mirek.kpler.dto.PositionsRequest;
 import uk.mirek.kpler.models.PositionModel;
 import uk.mirek.kpler.repositories.PositionRepo;
 import uk.mirek.kpler.repositories.PositionSpecs;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
@@ -44,7 +46,7 @@ class KplerServiceTest {
                 new Position(123L, 1L, 1L, 1L, 1.1, 1.1, 1, 1, "1", 1L)
         );
 
-        var response = service.ingest(request);
+        var response = service.ingest(new PositionsRequest(UUID.randomUUID().toString(), request));
 
         assertThat(response.correlationId(), notNullValue());
         verify(repo, times(2)).saveAndFlush(ArgumentMatchers.any(PositionModel.class));

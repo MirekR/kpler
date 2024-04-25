@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import uk.mirek.kpler.annotations.LoggableRequest;
 import uk.mirek.kpler.dto.CorrelationResponse;
 import uk.mirek.kpler.dto.Position;
+import uk.mirek.kpler.dto.PositionsRequest;
 import uk.mirek.kpler.services.KplerService;
 import uk.mirek.kpler.services.ValidateInputs;
 
@@ -23,13 +24,19 @@ public class KplerController {
 
     @PostMapping
     @LoggableRequest
-    public CorrelationResponse ingest(@Valid @RequestBody() List<Position> positions) {
-        return kplerService.ingest(positions);
+    public CorrelationResponse ingest(@Valid @RequestBody() PositionsRequest request) {
+        return kplerService.ingest(request);
     }
 
-    @GetMapping
+    @GetMapping(produces = {"application/json", "application/xml"})
     @LoggableRequest
-    public List<Position> all(Long mmsi, Double fromLat, Double fromLon, Double toLat, Double toLon, Long fromTime, Long toTime) {
+    public List<Position> all(@RequestParam(required = false) Long mmsi,
+                              @RequestParam(required = false) Double fromLat,
+                              @RequestParam(required = false) Double fromLon,
+                              @RequestParam(required = false) Double toLat,
+                              @RequestParam(required = false) Double toLon,
+                              @RequestParam(required = false) Long fromTime,
+                              @RequestParam(required = false) Long toTime) {
         validateInputs.validatePositionParameters(fromLat, fromLon, toLat, toLon, fromTime, toTime);
         return kplerService.all(mmsi, fromLat, fromLon, toLat, toLon, fromTime, toTime);
     }
