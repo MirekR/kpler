@@ -77,7 +77,8 @@ Proposed callback response structure
 ```
 
 **Quality**
-***Unit testing***
+
+***Unit testing:***
 The service code is unit tested, for ensuring quality part of the ``mvn clean install``, jacoco reporting runs
 generating results in the ``/target/site/jacoco`` folder. Results can be view in browser and asserted in 
 deployment pipelines to ensure code is tested. 

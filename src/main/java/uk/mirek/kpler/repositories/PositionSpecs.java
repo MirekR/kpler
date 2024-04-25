@@ -1,5 +1,6 @@
 package uk.mirek.kpler.repositories;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import uk.mirek.kpler.models.PositionModel;
@@ -34,13 +35,13 @@ public class PositionSpecs {
                 .map(specs::and)
                 .orElse(specs);
 
-        specs = Optional.ofNullable(fromTime)
-                .map(time -> betweenTimes(time, toTime))
-                .orElse(specs);
+        if (ObjectUtils.allNotNull(fromTime, toTime)) {
+            specs = specs.and(betweenTimes(fromTime, toTime));
+        }
 
-        specs = Optional.ofNullable(fromLat)
-                .map(lat -> betweenCoordinates(fromLat, toLat, fromLon, toLon))
-                .orElse(specs);
+        if (ObjectUtils.allNotNull(fromLat, toLat, fromLon, toLon)) {
+            specs = specs.and(betweenCoordinates(fromLat, toLat, fromLon, toLon));
+        }
 
         return specs;
     }
