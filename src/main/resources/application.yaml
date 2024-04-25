@@ -1,0 +1,4 @@
+spring:
+  application.name: kpler
+management:
+  endpoints.web.exposure.include: prometheus

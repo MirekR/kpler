@@ -1,0 +1,15 @@
+events {
+}
+
+http {
+    client_max_body_size 20m;
+    limit_req_zone $binary_remote_addr zone=mylimit:10m rate=1r/s;
+
+    server {
+        listen 666;
+        location / {
+            limit_req zone=mylimit;
+            proxy_pass http://docker.for.mac.localhost:8080/;
+        }
+    }
+}
