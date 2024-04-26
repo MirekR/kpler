@@ -20,7 +20,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class KplerApplicationTests {
+class KplerApplicationIT {
     @LocalServerPort
     private int serverPort;
     private String baseUrl;

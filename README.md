@@ -103,7 +103,7 @@ deployment pipelines to ensure code is tested.
 On top of the unit tests, there should set of integration tests making sure components are autowiring correctly and 
 endpoints are able to request and response to requests. 
 Implemented as IT with notes in reference to the Cucumber style, that could be improvement to write them in this style
-around scenarios - see ``KplerApplicationTests``
+around scenarios - see ``KplerApplicationIT``
 Example: 
 ```
   Scenario: Sunny upload and data query
