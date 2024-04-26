@@ -44,7 +44,11 @@ Requests and responses should implement "correlationId" field for traceability a
 services but correlationIds are, to display the idea, used in the request/reponse in the ingest.
 
 ***Upload performance:***
-At the moment, service implements simple ingest endpoint (POST at http://localhost:8080/kpler) accepting JSON body.
+ - Single Record upload / streaming: Service allows to push single record in order to ensure as much "up-to-date"
+   data as possible. This relies on upstream services to push data as they come. It is allowed via standard rest
+   endpoint, in the future we could add functionality to consume data from Kafka or any other messaging platform
+   that would be supported by upstream services
+ - Bulk upload: At the moment, service implements simple ingest endpoint (POST at http://localhost:8080/kpler) accepting JSON body.
 Assuming the data set will grow, this might become too time-consuming, for example when using API Gateway in AWS max 
 request timeout is 30s potentionally causing issues. 
 This could be mitigated using async processing. We could introduce endpoint POST /kpler/upload returning upload url, for 
@@ -84,9 +88,22 @@ generating results in the ``/target/site/jacoco`` folder. Results can be view in
 deployment pipelines to ensure code is tested. 
 
 ***Integration testing / BDD style:***
-TBD
-On top of the unit tests, there should set of integration tests makign sure components are autowiring correctly and 
+On top of the unit tests, there should set of integration tests making sure components are autowiring correctly and 
 endpoints are able to request and response to requests. 
+Implemented as IT with notes in reference to the Cucumber style, that could be improvement to write them in this style
+around scenarios.
+Example: 
+```
+  Scenario: Sunny upload and data query
+  When Ingest endpoint is requested correlationId "correlationId" with data
+  |mmis|timestamp|||||
+  Then Service should process data and respone with correlationId "correlationId"
+  Then I reuqest full data set matching
+  |data example||||
+  Then I request data for mmsi
+  |data example||||
+```
+
 
 ***User Rate Limiting:***
 Service itself doesn't enforce rate limiting, this is done via nginx for greater flexibility and avoiding in the 

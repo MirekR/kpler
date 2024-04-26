@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.jpa.domain.Specification;
 import uk.mirek.kpler.dto.Position;
+import uk.mirek.kpler.dto.PositionRequest;
 import uk.mirek.kpler.dto.PositionsRequest;
 import uk.mirek.kpler.models.PositionModel;
 import uk.mirek.kpler.repositories.PositionRepo;
@@ -41,15 +42,29 @@ class KplerServiceTest {
 
     @Test
     void shouldIngestData() {
-        var request = List.of(
+        var request = new PositionsRequest(UUID.randomUUID().toString(), List.of(
                 new Position(1234L, 1L, 1L, 1L, 1.1, 1.1, 1, 1, "1", 1L),
                 new Position(123L, 1L, 1L, 1L, 1.1, 1.1, 1, 1, "1", 1L)
-        );
+        ));
 
-        var response = service.ingest(new PositionsRequest(UUID.randomUUID().toString(), request));
+        var response = service.ingest(request);
 
         assertThat(response.correlationId(), notNullValue());
+        assertThat(response.correlationId(), is(request.correlationId()));
         verify(repo, times(2)).saveAndFlush(ArgumentMatchers.any(PositionModel.class));
+    }
+
+    @Test
+    void shouldIngestSingle() {
+        var request = new PositionRequest(UUID.randomUUID().toString(),
+                new Position(1234L, 1L, 1L, 1L, 1.1, 1.1, 1, 1, "1", 1L)
+        );
+
+        var response = service.ingestSingle(request);
+
+        assertThat(response.correlationId(), notNullValue());
+        assertThat(response.correlationId(), is(request.correlationId()));
+        verify(repo).saveAndFlush(ArgumentMatchers.any(PositionModel.class));
     }
 
     @Test

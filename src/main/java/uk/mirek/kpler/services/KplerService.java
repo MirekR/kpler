@@ -3,12 +3,14 @@ package uk.mirek.kpler.services;
 import org.springframework.stereotype.Service;
 import uk.mirek.kpler.dto.CorrelationResponse;
 import uk.mirek.kpler.dto.Position;
+import uk.mirek.kpler.dto.PositionRequest;
 import uk.mirek.kpler.dto.PositionsRequest;
 import uk.mirek.kpler.models.PositionModel;
 import uk.mirek.kpler.repositories.PositionRepo;
 import uk.mirek.kpler.repositories.PositionSpecs;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,14 +23,25 @@ public class KplerService {
         this.positionSpecs = positionSpecs;
     }
 
+    public CorrelationResponse ingestSingle(PositionRequest request) {
+        insertSinglePosition(request.position());
+        return new CorrelationResponse(request.correlationId());
+    }
+
     public CorrelationResponse ingest(PositionsRequest request) {
         request
                 .positions()
                 .stream()
-                .map(Position::toModel)
-                .forEach(positionRepo::saveAndFlush);
+                .forEach(this::insertSinglePosition);
 
         return new CorrelationResponse(request.correlationId());
+    }
+
+    private void insertSinglePosition(Position position) {
+        Optional
+                .ofNullable(position)
+                .map(Position::toModel)
+                .ifPresent(positionRepo::saveAndFlush);
     }
 
     public List<Position> all(Long mmsi, Double fromLat, Double fromLon, Double toLat, Double toLon, Long fromTime, Long toTime) {

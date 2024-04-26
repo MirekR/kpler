@@ -1,13 +1,15 @@
-[
-  {
-    "status": 0,
-    "stationId": 81,
-    "speed": 180,
-    "lon": 15.4415,
-    "lat": 42.75178,
-    "course": 144,
-    "heading": 144,
-    "rot": "",
-    "timestamp": 1372683960
-  }
-]
+{
+  "correlationId": "randomCorrelationId",
+  "positions": [
+    {
+      "status": 0,
+      "stationId": 81,
+      "speed": 180,
+      "lon": 15.4415,
+      "lat": 42.75178,
+      "course": 144,
+      "heading": 144,
+      "rot": ""
+    }
+  ]
+}

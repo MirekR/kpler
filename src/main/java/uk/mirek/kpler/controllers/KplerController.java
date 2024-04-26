@@ -1,10 +1,12 @@
 package uk.mirek.kpler.controllers;
 
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import uk.mirek.kpler.annotations.LoggableRequest;
 import uk.mirek.kpler.dto.CorrelationResponse;
 import uk.mirek.kpler.dto.Position;
+import uk.mirek.kpler.dto.PositionRequest;
 import uk.mirek.kpler.dto.PositionsRequest;
 import uk.mirek.kpler.services.KplerService;
 import uk.mirek.kpler.services.ValidateInputs;
@@ -24,8 +26,16 @@ public class KplerController {
 
     @PostMapping
     @LoggableRequest
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public CorrelationResponse ingest(@Valid @RequestBody() PositionsRequest request) {
         return kplerService.ingest(request);
+    }
+
+    @PostMapping("/single")
+    @LoggableRequest
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public CorrelationResponse ingestSinglePosition(@Valid @RequestBody() PositionRequest request) {
+        return kplerService.ingestSingle(request);
     }
 
     @GetMapping(produces = {"application/json", "application/xml"})
