@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class LoggingAspect {
-    Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
+    private final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
 
     private final ObjectMapper objectMapper;
 
@@ -33,9 +33,13 @@ public class LoggingAspect {
 
     private void log(String prefix, String name, Object object) {
         try {
-            logger.info("{}: {}: values {}, ", prefix, name, objectMapper.writeValueAsString(object));
+            getLogger().info("{}: {}: values {}", prefix, name, objectMapper.writeValueAsString(object));
         } catch (Exception ex) {
-            logger.warn("Unable to log request {}", ex.toString());
+            getLogger().warn("Unable to log request {}", ex.toString());
         }
+    }
+
+    protected Logger getLogger() {
+        return logger;
     }
 }

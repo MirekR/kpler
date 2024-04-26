@@ -12,7 +12,7 @@ mvn clean install
 
 ***Starting service***
 ```
-java -jar target/kpler-0.0.1-SNAPSHOT.jar
+java -jar target/kpler-*.jar
 ```
 
 ***Swagger UI***
@@ -23,6 +23,18 @@ To see available endpoints, you can navigate in your browser to [Swagger UI](htt
 
 By default, the service returns data in JSON format, to request in XML format, provide request header ```Accept=application/xml```
 
+***Dockerisation***
+
+Once the app is build, you can create docker image by running command:
+```docker build --tag=kpler:latest .  ```
+
+Then you can start dockerised version by
+```docker run -p 8888:8080 kpler:latest```
+
+Then verify by browsing
+```http://localhost:8888/swagger-ui/index.html```
+
+Happy dockering :) 
 
 **Discussion and consideration**
 
@@ -91,7 +103,7 @@ deployment pipelines to ensure code is tested.
 On top of the unit tests, there should set of integration tests making sure components are autowiring correctly and 
 endpoints are able to request and response to requests. 
 Implemented as IT with notes in reference to the Cucumber style, that could be improvement to write them in this style
-around scenarios.
+around scenarios - see ``KplerApplicationTests``
 Example: 
 ```
   Scenario: Sunny upload and data query
@@ -104,6 +116,7 @@ Example:
   |data example||||
 ```
 
+**Others**
 
 ***User Rate Limiting:***
 Service itself doesn't enforce rate limiting, this is done via nginx for greater flexibility and avoiding in the 
@@ -117,4 +130,4 @@ and access service via ```http://localhost:666```
 ***Data consistency / ids***
 On insert to the database, id per position record is generated as combination of the mmsi, stationId and timestamp.
 This allows multiple processing without overhead of checking existence of the record. If the record exists, 
-it overrides data with latest information
+it overrides data with the latest information.

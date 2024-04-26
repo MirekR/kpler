@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,7 +20,7 @@ import java.util.UUID;
 public class BaseExceptionHandler {
     private final Logger logger = LoggerFactory.getLogger(BaseExceptionHandler.class);
 
-    @ExceptionHandler({HandlerMethodValidationException.class, ValidationException.class})
+    @ExceptionHandler({HandlerMethodValidationException.class, ValidationException.class, MethodArgumentNotValidException.class})
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleValidationException(Exception ex) {
         return new ResponseEntity<>(new ErrorResponse(ex.getMessage(), UUID.randomUUID().toString()), HttpStatus.BAD_REQUEST);
