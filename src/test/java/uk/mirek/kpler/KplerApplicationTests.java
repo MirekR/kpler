@@ -66,7 +66,7 @@ class KplerApplicationTests {
     void validationFailedPath() throws IOException, URISyntaxException {
         var classloader = Thread.currentThread().getContextClassLoader();
         var is = classloader.getResourceAsStream("data/invalid_ship_positions.json");
-        
+
         //When
         var ingest = template.postForEntity(baseUrl + "/kpler", mapper.readValue(is, PositionsRequest.class), ErrorResponse.class);
 
