@@ -9,19 +9,19 @@ import uk.mirek.kpler.dto.CorrelationResponse;
 import uk.mirek.kpler.dto.Position;
 import uk.mirek.kpler.dto.PositionRequest;
 import uk.mirek.kpler.dto.PositionsRequest;
-import uk.mirek.kpler.services.KplerService;
+import uk.mirek.kpler.services.CoordinatesService;
 import uk.mirek.kpler.services.ValidateInputs;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/kpler")
-public class KplerController {
-    private final KplerService kplerService;
+public class CoordinatesController {
+    private final CoordinatesService coordinatesService;
     private final ValidateInputs validateInputs;
 
-    public KplerController(KplerService kplerService, ValidateInputs validateInputs) {
-        this.kplerService = kplerService;
+    public CoordinatesController(CoordinatesService coordinatesService, ValidateInputs validateInputs) {
+        this.coordinatesService = coordinatesService;
         this.validateInputs = validateInputs;
     }
 
@@ -30,15 +30,15 @@ public class KplerController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     @Operation(summary = "Bulk ingest of the ships position data")
     public CorrelationResponse ingest(@Valid @RequestBody() PositionsRequest request) {
-        return kplerService.ingest(request);
+        return coordinatesService.ingest(request);
     }
 
     @PostMapping("/single")
     @LoggableRequest
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Single position data ingest")
     public CorrelationResponse ingestSinglePosition(@Valid @RequestBody() PositionRequest request) {
-        return kplerService.ingestSingle(request);
+        return coordinatesService.ingestSingle(request);
     }
 
     @GetMapping(produces = {"application/json", "application/xml"})
@@ -52,6 +52,6 @@ public class KplerController {
                               @RequestParam(required = false) Long fromTime,
                               @RequestParam(required = false) Long toTime) {
         validateInputs.validatePositionParameters(fromLat, fromLon, toLat, toLon, fromTime, toTime);
-        return kplerService.all(mmsi, fromLat, fromLon, toLat, toLon, fromTime, toTime);
+        return coordinatesService.all(mmsi, fromLat, fromLon, toLat, toLon, fromTime, toTime);
     }
 }

@@ -10,7 +10,7 @@ import uk.mirek.kpler.dto.CorrelationResponse;
 import uk.mirek.kpler.dto.Position;
 import uk.mirek.kpler.dto.PositionRequest;
 import uk.mirek.kpler.dto.PositionsRequest;
-import uk.mirek.kpler.services.KplerService;
+import uk.mirek.kpler.services.CoordinatesService;
 import uk.mirek.kpler.services.ValidateInputs;
 
 import java.util.List;
@@ -21,15 +21,15 @@ import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class KplerControllerTest {
+class CoordinatesControllerTest {
     @Mock
-    private KplerService service;
+    private CoordinatesService service;
 
     @Mock
     private ValidateInputs validateInputs;
 
     @InjectMocks
-    private KplerController controller;
+    private CoordinatesController controller;
 
     @AfterEach
     void afterEach() {

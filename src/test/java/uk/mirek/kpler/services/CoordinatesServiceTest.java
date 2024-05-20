@@ -7,13 +7,11 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.jpa.domain.Specification;
 import uk.mirek.kpler.dto.Position;
 import uk.mirek.kpler.dto.PositionRequest;
 import uk.mirek.kpler.dto.PositionsRequest;
 import uk.mirek.kpler.models.PositionModel;
 import uk.mirek.kpler.repositories.PositionRepo;
-import uk.mirek.kpler.repositories.PositionSpecs;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,16 +22,13 @@ import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class KplerServiceTest {
+class CoordinatesServiceTest {
 
     @Mock
     private PositionRepo repo;
 
-    @Mock
-    private PositionSpecs positionSpecs;
-
     @InjectMocks
-    private KplerService service;
+    private CoordinatesService service;
 
     @AfterEach
     void afterEach() {
@@ -75,11 +70,10 @@ class KplerServiceTest {
                 new PositionModel("2", 123L, 1L, 1L, 1L, 1.1, 1.1, 1, 1, "1", 1L)
         );
 
-        when(positionSpecs.getQuerySpecifications(position.mmsi(),
+
+        when(repo.findAllWithParams(position.mmsi(),
                 position.lat(), position.lon(), position.lat(),
-                position.lon(), position.timestamp(), position.timestamp() + 10))
-                .thenReturn(Specification.where(null));
-        when(repo.findAll(any(Specification.class))).thenReturn(data);
+                position.lon(), position.timestamp(), position.timestamp() + 10)).thenReturn(data);
 
         var response = service.all(position.mmsi(),
                 position.lat(), position.lon(), position.lat(),
@@ -88,8 +82,7 @@ class KplerServiceTest {
         assertThat(response, notNullValue());
         assertThat(response.size(), is(2));
 
-        verify(repo).findAll(any(Specification.class));
-        verify(positionSpecs).getQuerySpecifications(position.mmsi(),
+        verify(repo).findAllWithParams(position.mmsi(),
                 position.lat(), position.lon(), position.lat(),
                 position.lon(), position.timestamp(), position.timestamp() + 10);
     }

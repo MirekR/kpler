@@ -32,7 +32,7 @@ public class BaseExceptionHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<ErrorResponse> handleException(Exception ex) {
-        logger.warn("Exception", ex);
+        logger.error("Exception", ex);
         return new ResponseEntity<>(new ErrorResponse("Encountered internal issue, please try again", UUID.randomUUID().toString()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

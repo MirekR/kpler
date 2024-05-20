@@ -7,20 +7,17 @@ import uk.mirek.kpler.dto.PositionRequest;
 import uk.mirek.kpler.dto.PositionsRequest;
 import uk.mirek.kpler.models.PositionModel;
 import uk.mirek.kpler.repositories.PositionRepo;
-import uk.mirek.kpler.repositories.PositionSpecs;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class KplerService {
+public class CoordinatesService {
     private final PositionRepo positionRepo;
-    private final PositionSpecs positionSpecs;
 
-    public KplerService(PositionRepo positionRepo, PositionSpecs positionSpecs) {
+    public CoordinatesService(PositionRepo positionRepo) {
         this.positionRepo = positionRepo;
-        this.positionSpecs = positionSpecs;
     }
 
     public CorrelationResponse ingestSingle(PositionRequest request) {
@@ -45,10 +42,7 @@ public class KplerService {
     }
 
     public List<Position> all(Long mmsi, Double fromLat, Double fromLon, Double toLat, Double toLon, Long fromTime, Long toTime) {
-        var specs = positionSpecs
-                .getQuerySpecifications(mmsi, fromLat, fromLon, toLat, toLon, fromTime, toTime);
-
-        return positionRepo.findAll(specs).stream()
+        return positionRepo.findAllWithParams(mmsi, fromLat, fromLon, toLat, toLon, fromTime, toTime).stream()
                 .map(PositionModel::toDto)
                 .collect(Collectors.toList());
     }
